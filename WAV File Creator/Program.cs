@@ -39,13 +39,113 @@ BinaryPrimitives.WriteUInt16LittleEndian(BITSPERSAMPLE, 16);
 aSCIIEncoding.GetBytes("data", CHUNK2ID);
 BinaryPrimitives.WriteUInt32LittleEndian(CHUNK2SIZE, 0);
 
+//tempo for notes. 1 means 1 second per stanza
+int tempo = 2;
+
 //actual data
-bool up = true;
+StandardWaveformNote("C4", 4);
+AddBlank(10);
+StandardWaveformNote("C4", 4);
+AddBlank(10);
+StandardWaveformNote("G4", 4);
+AddBlank(10);
+StandardWaveformNote("G4", 4);
+AddBlank(20);
+
+StandardWaveformNote("A4", 4);
+AddBlank(10);
+StandardWaveformNote("A4", 4);
+AddBlank(10);
+StandardWaveformNote("G4", 2);
+AddBlank(20);
+
+StandardWaveformNote("F4", 4);
+AddBlank(10);
+StandardWaveformNote("F4", 4);
+AddBlank(10);
+StandardWaveformNote("E4", 4);
+AddBlank(10);
+StandardWaveformNote("E4", 4);
+AddBlank(20);
+
+StandardWaveformNote("D4", 4);
+AddBlank(10);
+StandardWaveformNote("D4", 4);
+AddBlank(10);
+StandardWaveformNote("C4", 2);
+AddBlank(20);
+
+StandardWaveformNote("G4", 4);
+AddBlank(10);
+StandardWaveformNote("G4", 4);
+AddBlank(10);
+StandardWaveformNote("F4", 4);
+AddBlank(10);
+StandardWaveformNote("F4", 4);
+AddBlank(20);
+
+StandardWaveformNote("E4", 4);
+AddBlank(10);
+StandardWaveformNote("E4", 4);
+AddBlank(10);
+StandardWaveformNote("D4", 2);
+AddBlank(20);
+
+StandardWaveformNote("G4", 4);
+AddBlank(10);
+StandardWaveformNote("G4", 4);
+AddBlank(10);
+StandardWaveformNote("F4", 4);
+AddBlank(10);
+StandardWaveformNote("F4", 4);
+AddBlank(20);
+
+StandardWaveformNote("E4", 4);
+AddBlank(10);
+StandardWaveformNote("E4", 4);
+AddBlank(10);
+StandardWaveformNote("D4", 2);
+AddBlank(20);
+
+StandardWaveformNote("C4", 4);
+AddBlank(10);
+StandardWaveformNote("C4", 4);
+AddBlank(10);
+StandardWaveformNote("G4", 4);
+AddBlank(10);
+StandardWaveformNote("G4", 4);
+AddBlank(20);
+
+StandardWaveformNote("A4", 4);
+AddBlank(10);
+StandardWaveformNote("A4", 4);
+AddBlank(10);
+StandardWaveformNote("G4", 2);
+AddBlank(20);
+
+StandardWaveformNote("F4", 4);
+AddBlank(10);
+StandardWaveformNote("F4", 4);
+AddBlank(10);
+StandardWaveformNote("E4", 4);
+AddBlank(10);
+StandardWaveformNote("E4", 4);
+AddBlank(20);
+
+StandardWaveformNote("D4", 4);
+AddBlank(10);
+StandardWaveformNote("D4", 4);
+AddBlank(10);
+StandardWaveformNote("C4", 2);
+AddBlank(20);
+
+//square A note
+/*bool up = true;
 for(int i = 0; i < 44100; i++)
 {
     byte[] tempdata = new byte[2];
 
-    if(i % 100 == 0)
+    if(i % 50 == 0)
     {
         up = !up;
     }
@@ -60,14 +160,11 @@ for(int i = 0; i < 44100; i++)
     }
 
     DATA.Add(tempdata);
-}
+}*/
 
 //Calculate sizes based on data
 BinaryPrimitives.WriteUInt32LittleEndian(SIZE, (uint)((DATA.Count * 2) + 36));
 BinaryPrimitives.WriteUInt32LittleEndian(CHUNK2SIZE, (uint)(DATA.Count * 2));
-
-//Reverse data after creation so that it is in little endian format.
-DATA.Reverse();
 
 //Write the file (and delete old one if it exists)
 if (File.Exists("test.wav"))
@@ -95,5 +192,159 @@ using (FileStream streamWriter = new FileStream("test.wav", FileMode.Append))
     foreach (byte[] bytes in DATA)
     {
         streamWriter.Write(bytes);
+    }
+}
+
+Console.ReadKey();
+
+//Triangle wave
+void StandardWaveform(int target)
+{
+    int pos = 0;
+    int tempSample;
+    bool up = true;
+    for (int i = 0; i < 44100; i++)
+    {
+        byte[] tempdata = new byte[2];
+        tempSample = (int)(MathF.Round((pos / (float)target) * 16383));
+        //Console.WriteLine(tempSample);
+
+        if (up)
+        {
+            pos++;
+        }
+        else
+        {
+            pos--;
+        }
+
+        if (pos >= target)
+        {
+            up = false;
+        }
+        else if (pos <= -target)
+        {
+            up = true;
+        }
+
+        BinaryPrimitives.WriteInt16LittleEndian(tempdata, (short)tempSample);
+
+        DATA.Add(tempdata);
+    }
+}
+
+//Triangle wave with note list. 1 length is a whole note, 2 is a half note, 4 is quarter note, 8 is eighth, 16 is sixteenth.
+void StandardWaveformNote(string note, int length)
+{
+    Dictionary<string, int> notes = new Dictionary<string, int>()
+    {
+        {"C1",689 },
+        {"C#1",649 },
+        {"D1",613 },
+        {"D#1",580 },
+        {"E1",538 },
+        {"F1",513 },
+        {"F#1",479 },
+        {"G1",450 },
+        {"G#1",424 },
+        {"A1",401 },
+        {"A#1",380 },
+        {"B1",362 },
+
+        {"C2",339 },
+        {"C#2",320 },
+        {"D2",302 },
+        {"D#2",286 },
+        {"E2",269 },
+        {"F2",254 },
+        {"F#2",240 },
+        {"G2",225 },
+        {"G#2",212 },
+        {"A2",201 },
+        {"A#2",190 },
+        {"B2",179 },
+
+        {"C3",170 },
+        {"C#3",160 },
+        {"D3",151 },
+        {"D#3",142 },
+        {"E3",134 },
+        {"F3",127 },
+        {"F#3",119 },
+        {"G3",113 },
+        {"G#3",106 },
+        {"A3",100 },
+        {"A#3",95 },
+        {"B3",90 },
+
+        {"C4",84 },
+        {"C#4",80 },
+        {"D4",75 },
+        {"D#4",71 },
+        {"E4",67 },
+        {"F4",63 },
+        {"F#4",60 },
+        {"G4",56 },
+        {"G#4",53 },
+        {"A4",50 },
+        {"A#4",47 },
+        {"B4",45 },
+
+        {"C5",42 },
+        {"C#5",40 },
+        {"D5",38 },
+        {"D#5",35 },
+        {"E5",34 },
+        {"F5",32 },
+        {"F#5",30 },
+        {"G5",28 },
+        {"G#5",27 },
+        {"A5",25 },
+        {"A#5",24 },
+        {"B5",22 },
+    };
+
+    int target = notes[note];
+
+    int pos = 0;
+    int tempSample;
+    bool up = true;
+    for (int i = 0; i < (44100/length) * tempo; i++)
+    {
+        byte[] tempdata = new byte[2];
+        tempSample = (int)(MathF.Round((pos / (float)target) * 16383));
+        //Console.WriteLine(tempSample);
+
+        if (up)
+        {
+            pos++;
+        }
+        else
+        {
+            pos--;
+        }
+
+        if (pos >= target)
+        {
+            up = false;
+        }
+        else if (pos <= -target)
+        {
+            up = true;
+        }
+
+        BinaryPrimitives.WriteInt16LittleEndian(tempdata, (short)tempSample);
+
+        DATA.Add(tempdata);
+    }
+}
+
+void AddBlank(int miliseconds)
+{
+    for (int i = 0;i < miliseconds * 44.1;i++)
+    {
+        byte[] tempdata = new byte[2];
+        BinaryPrimitives.WriteInt16LittleEndian(tempdata, 0);
+        DATA.Add(tempdata);
     }
 }
