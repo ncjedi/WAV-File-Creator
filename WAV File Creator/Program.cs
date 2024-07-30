@@ -42,102 +42,105 @@ BinaryPrimitives.WriteUInt32LittleEndian(CHUNK2SIZE, 0);
 //tempo for notes. 1 means 1 second per stanza
 int tempo = 2;
 
+//volume
+int volume = 16383;
+
 //actual data
-StandardWaveformNote("C4", 4);
+SinWaveformNote("C4", 4);
 AddBlank(10);
-StandardWaveformNote("C4", 4);
+SinWaveformNote("C4", 4);
 AddBlank(10);
-StandardWaveformNote("G4", 4);
+SinWaveformNote("G4", 4);
 AddBlank(10);
-StandardWaveformNote("G4", 4);
+SinWaveformNote("G4", 4);
 AddBlank(20);
 
-StandardWaveformNote("A4", 4);
+SinWaveformNote("A4", 4);
 AddBlank(10);
-StandardWaveformNote("A4", 4);
+SinWaveformNote("A4", 4);
 AddBlank(10);
-StandardWaveformNote("G4", 2);
+SinWaveformNote("G4", 2);
 AddBlank(20);
 
-StandardWaveformNote("F4", 4);
+SinWaveformNote("F4", 4);
 AddBlank(10);
-StandardWaveformNote("F4", 4);
+SinWaveformNote("F4", 4);
 AddBlank(10);
-StandardWaveformNote("E4", 4);
+SinWaveformNote("E4", 4);
 AddBlank(10);
-StandardWaveformNote("E4", 4);
+SinWaveformNote("E4", 4);
 AddBlank(20);
 
-StandardWaveformNote("D4", 4);
+SinWaveformNote("D4", 4);
 AddBlank(10);
-StandardWaveformNote("D4", 4);
+SinWaveformNote("D4", 4);
 AddBlank(10);
-StandardWaveformNote("C4", 2);
+SinWaveformNote("C4", 2);
 AddBlank(20);
 
-StandardWaveformNote("G4", 4);
+SinWaveformNote("G4", 4);
 AddBlank(10);
-StandardWaveformNote("G4", 4);
+SinWaveformNote("G4", 4);
 AddBlank(10);
-StandardWaveformNote("F4", 4);
+SinWaveformNote("F4", 4);
 AddBlank(10);
-StandardWaveformNote("F4", 4);
+SinWaveformNote("F4", 4);
 AddBlank(20);
 
-StandardWaveformNote("E4", 4);
+SinWaveformNote("E4", 4);
 AddBlank(10);
-StandardWaveformNote("E4", 4);
+SinWaveformNote("E4", 4);
 AddBlank(10);
-StandardWaveformNote("D4", 2);
+SinWaveformNote("D4", 2);
 AddBlank(20);
 
-StandardWaveformNote("G4", 4);
+SinWaveformNote("G4", 4);
 AddBlank(10);
-StandardWaveformNote("G4", 4);
+SinWaveformNote("G4", 4);
 AddBlank(10);
-StandardWaveformNote("F4", 4);
+SinWaveformNote("F4", 4);
 AddBlank(10);
-StandardWaveformNote("F4", 4);
+SinWaveformNote("F4", 4);
 AddBlank(20);
 
-StandardWaveformNote("E4", 4);
+SinWaveformNote("E4", 4);
 AddBlank(10);
-StandardWaveformNote("E4", 4);
+SinWaveformNote("E4", 4);
 AddBlank(10);
-StandardWaveformNote("D4", 2);
+SinWaveformNote("D4", 2);
 AddBlank(20);
 
-StandardWaveformNote("C4", 4);
+SinWaveformNote("C4", 4);
 AddBlank(10);
-StandardWaveformNote("C4", 4);
+SinWaveformNote("C4", 4);
 AddBlank(10);
-StandardWaveformNote("G4", 4);
+SinWaveformNote("G4", 4);
 AddBlank(10);
-StandardWaveformNote("G4", 4);
+SinWaveformNote("G4", 4);
 AddBlank(20);
 
-StandardWaveformNote("A4", 4);
+SinWaveformNote("A4", 4);
 AddBlank(10);
-StandardWaveformNote("A4", 4);
+SinWaveformNote("A4", 4);
 AddBlank(10);
-StandardWaveformNote("G4", 2);
+SinWaveformNote("G4", 2);
 AddBlank(20);
 
-StandardWaveformNote("F4", 4);
+SinWaveformNote("F4", 4);
 AddBlank(10);
-StandardWaveformNote("F4", 4);
+SinWaveformNote("F4", 4);
 AddBlank(10);
-StandardWaveformNote("E4", 4);
+SinWaveformNote("E4", 4);
 AddBlank(10);
-StandardWaveformNote("E4", 4);
+SinWaveformNote("E4", 4);
 AddBlank(20);
 
-StandardWaveformNote("D4", 4);
+SinWaveformNote("D4", 4);
 AddBlank(10);
-StandardWaveformNote("D4", 4);
+SinWaveformNote("D4", 4);
 AddBlank(10);
-StandardWaveformNote("C4", 2);
-AddBlank(20);
+SinWaveformNote("C4", 2);
+AddBlank(1000);
 
 //square A note
 /*bool up = true;
@@ -200,13 +203,13 @@ Console.ReadKey();
 //Triangle wave
 void StandardWaveform(int target)
 {
-    int pos = 0;
     int tempSample;
     bool up = true;
+    int pos = 0;
     for (int i = 0; i < 44100; i++)
     {
         byte[] tempdata = new byte[2];
-        tempSample = (int)(MathF.Round((pos / (float)target) * 16383));
+        tempSample = (int)(MathF.Round((pos / (float)target) * volume));
         //Console.WriteLine(tempSample);
 
         if (up)
@@ -306,13 +309,228 @@ void StandardWaveformNote(string note, int length)
 
     int target = notes[note];
 
-    int pos = 0;
     int tempSample;
     bool up = true;
-    for (int i = 0; i < (44100/length) * tempo; i++)
+    int pos = 0;
+    for (int i = 0; i < (44100/length) * tempo || pos != 0; i++)
     {
         byte[] tempdata = new byte[2];
-        tempSample = (int)(MathF.Round((pos / (float)target) * 16383));
+        tempSample = (int)(MathF.Round((pos / (float)target) * volume));
+        //Console.WriteLine(tempSample);
+
+        if (up)
+        {
+            pos++;
+        }
+        else
+        {
+            pos--;
+        }
+
+        if (pos >= target)
+        {
+            up = false;
+        }
+        else if (pos <= -target)
+        {
+            up = true;
+        }
+
+        BinaryPrimitives.WriteInt16LittleEndian(tempdata, (short)tempSample);
+
+        DATA.Add(tempdata);
+    }
+}
+
+void SinWaveformNote(string note, int length)
+{
+    Dictionary<string, int> notes = new Dictionary<string, int>()
+    {
+        {"C1",689 },
+        {"C#1",649 },
+        {"D1",613 },
+        {"D#1",580 },
+        {"E1",538 },
+        {"F1",513 },
+        {"F#1",479 },
+        {"G1",450 },
+        {"G#1",424 },
+        {"A1",401 },
+        {"A#1",380 },
+        {"B1",362 },
+
+        {"C2",339 },
+        {"C#2",320 },
+        {"D2",302 },
+        {"D#2",286 },
+        {"E2",269 },
+        {"F2",254 },
+        {"F#2",240 },
+        {"G2",225 },
+        {"G#2",212 },
+        {"A2",201 },
+        {"A#2",190 },
+        {"B2",179 },
+
+        {"C3",170 },
+        {"C#3",160 },
+        {"D3",151 },
+        {"D#3",142 },
+        {"E3",134 },
+        {"F3",127 },
+        {"F#3",119 },
+        {"G3",113 },
+        {"G#3",106 },
+        {"A3",100 },
+        {"A#3",95 },
+        {"B3",90 },
+
+        {"C4",84 },
+        {"C#4",80 },
+        {"D4",75 },
+        {"D#4",71 },
+        {"E4",67 },
+        {"F4",63 },
+        {"F#4",60 },
+        {"G4",56 },
+        {"G#4",53 },
+        {"A4",50 },
+        {"A#4",47 },
+        {"B4",45 },
+
+        {"C5",42 },
+        {"C#5",40 },
+        {"D5",38 },
+        {"D#5",35 },
+        {"E5",34 },
+        {"F5",32 },
+        {"F#5",30 },
+        {"G5",28 },
+        {"G#5",27 },
+        {"A5",25 },
+        {"A#5",24 },
+        {"B5",22 },
+    };
+
+    int target = notes[note];
+
+    int tempSample;
+    bool up = true;
+    int pos = 0;
+    for (int i = 0; i < (44100 / length) * tempo || pos != 0; i++)
+    {
+        byte[] tempdata = new byte[2];
+        tempSample = (int)(MathF.Round(MathF.Sin(pos / (float)target) * volume));
+        //Console.WriteLine(tempSample);
+
+        if (up)
+        {
+            pos++;
+        }
+        else
+        {
+            pos--;
+        }
+
+        if (pos >= target)
+        {
+            up = false;
+        }
+        else if (pos <= -target)
+        {
+            up = true;
+        }
+
+        BinaryPrimitives.WriteInt16LittleEndian(tempdata, (short)tempSample);
+
+        DATA.Add(tempdata);
+    }
+}
+
+//Triangle wave with note list. 1 length is a whole note, 2 is a half note, 4 is quarter note, 8 is eighth, 16 is sixteenth.
+void SmoothWaveformNote(string note, int length)
+{
+    Dictionary<string, int> notes = new Dictionary<string, int>()
+    {
+        {"C1",689 },
+        {"C#1",649 },
+        {"D1",613 },
+        {"D#1",580 },
+        {"E1",538 },
+        {"F1",513 },
+        {"F#1",479 },
+        {"G1",450 },
+        {"G#1",424 },
+        {"A1",401 },
+        {"A#1",380 },
+        {"B1",362 },
+
+        {"C2",339 },
+        {"C#2",320 },
+        {"D2",302 },
+        {"D#2",286 },
+        {"E2",269 },
+        {"F2",254 },
+        {"F#2",240 },
+        {"G2",225 },
+        {"G#2",212 },
+        {"A2",201 },
+        {"A#2",190 },
+        {"B2",179 },
+
+        {"C3",170 },
+        {"C#3",160 },
+        {"D3",151 },
+        {"D#3",142 },
+        {"E3",134 },
+        {"F3",127 },
+        {"F#3",119 },
+        {"G3",113 },
+        {"G#3",106 },
+        {"A3",100 },
+        {"A#3",95 },
+        {"B3",90 },
+
+        {"C4",84 },
+        {"C#4",80 },
+        {"D4",75 },
+        {"D#4",71 },
+        {"E4",67 },
+        {"F4",63 },
+        {"F#4",60 },
+        {"G4",56 },
+        {"G#4",53 },
+        {"A4",50 },
+        {"A#4",47 },
+        {"B4",45 },
+
+        {"C5",42 },
+        {"C#5",40 },
+        {"D5",38 },
+        {"D#5",35 },
+        {"E5",34 },
+        {"F5",32 },
+        {"F#5",30 },
+        {"G5",28 },
+        {"G#5",27 },
+        {"A5",25 },
+        {"A#5",24 },
+        {"B5",22 },
+    };
+
+    int target = notes[note];
+
+    int tempSample;
+    bool up = true;
+    int pos = 0;
+    for (int i = 0; i < (44100 / length) * tempo || pos != 0; i++)
+    {
+        byte[] tempdata = new byte[2];
+        tempSample = (int)(MathF.Round(MathF.Sqrt(Math.Abs(pos) / (float)target) * volume)); // make an algorithm that approaches the target but never quite reaches it. faster the farther away it is from it.
+        if(pos < 0)
+        {
+            tempSample = -tempSample;
+        }
         //Console.WriteLine(tempSample);
 
         if (up)
